@@ -4,6 +4,7 @@ html {
     color: #222;
     font-size: 1em;
     line-height: 1.4;
+    padding: 10px;
 }
 
 ::-moz-selection {
@@ -51,38 +52,36 @@ textarea {
     padding: 0.2em 0;
 }
 
-
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#pokemon-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    column-gap: 30px;
+}
+.pokemon {
+    border: 1px dotted #666;
+    display: block;
+    padding: 10px;
+}
+.pokemon .img {
+    display: block;
+}
 
 /* ==========================================================================
    Media Queries
    ========================================================================== */
 
 @media only screen and (min-width: 35em) {
-
 }
 
 @media print,
-       (-o-min-device-pixel-ratio: 5/4),
-       (-webkit-min-device-pixel-ratio: 1.25),
-       (min-resolution: 120dpi) {
-
+    (-o-min-device-pixel-ratio: 5/4),
+    (-webkit-min-device-pixel-ratio: 1.25),
+    (min-resolution: 120dpi) {
 }
 
 /* ==========================================================================

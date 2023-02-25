@@ -22,12 +22,36 @@ const getPokemon = (pokeNum) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(data);
     return data;
 });
-const pokemonList = document.getElementById("pokemon-list");
+const $pokemonList = document.getElementById("pokemon-list");
 ready(function () {
     console.log("ready");
-    for (let pokeIndex = 1; pokeIndex < 20; pokeIndex++) {
+    //If we were iterating over an array we would want to cache the array first before looping for performance
+    for (let pokeIndex = 1; pokeIndex < 151; pokeIndex++) {
         getPokemon(pokeIndex).then((pokemon) => {
-            pokemonList.innerHTML += `<li> <img src="${pokemon.sprites.front_default}" alt="" /> ${pokemon.name} </li>`;
+            // ! operator tells typescript this can't be null
+            const pokeBox = document.createElement("div");
+            pokeBox.id = `pokemon-${pokeIndex}`;
+            pokeBox.className = "pokemon";
+            pokeBox.innerHTML = `
+                <span class="img">
+                    <img src="${pokemon.sprites.front_default}" alt="" />
+                </span>
+                <span class="name">
+                    ${pokemon.name}
+                </span>
+            `;
+            pokeBox.addEventListener("click", (event) => {
+                var _a;
+                // Event target can sometimes return not an element so let's make sure we have an element
+                if (event.target instanceof Element) {
+                    // Now that we know we have an element we can cast the event.target as an HTMLElement to access Element methods
+                    const target = event.target;
+                    const targetDiv = target.closest("div");
+                    const pokemonName = (_a = targetDiv === null || targetDiv === void 0 ? void 0 : targetDiv.querySelector(".name")) === null || _a === void 0 ? void 0 : _a.textContent;
+                    alert(`Clicked  ${pokemonName}`);
+                }
+            });
+            $pokemonList === null || $pokemonList === void 0 ? void 0 : $pokemonList.appendChild(pokeBox);
         });
     }
 });
