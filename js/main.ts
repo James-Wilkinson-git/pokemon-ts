@@ -75,14 +75,13 @@ interface Xbox360Controller {
     7: "RT";
     8: "Double Box";
     9: "Hamburger";
-    10: "";
-    11: "";
+    10: "Left Joystick Press";
+    11: "Right Joystick Press";
     12: "Top";
     13: "Down";
     14: "Left";
     15: "Right";
     16: "Xbox";
-    17: "";
 }
 // New to the game pad experimenting so some types are any until I learn what type they are
 const haveEvents = "ongamepadconnected" in window;
@@ -128,22 +127,66 @@ const updateStatus = () => {
             // make sure it is a button object
             if (typeof button === "object") {
                 // We only want data on pressed buttons
-                if (button.pressed) {
-                    console.log(buttonIndex, button.value);
+                if (buttonIndex === 5 && button.pressed) {
+                    focusNextPokemon();
+                }
+                if (buttonIndex === 4 && button.pressed) {
+                    focusPreviousPokemon();
                 }
             }
         });
     });
     requestAnimationFrame(updateStatus);
 };
+//Should put JS Doc in now, to tell this is called by focusNext and previous pokemon that are called on button press
+// check if the documents active element is a pokemon div, if not select the first pokemon div
+const isPokemonFocused = () => {
+    const focused = document.activeElement;
+    if (
+        focused?.tagName === "BUTTON" &&
+        focused.classList.contains("pokemon")
+    ) {
+        return;
+    } else {
+        document.getElementById("pokemon-1")?.focus();
+    }
+};
+// Need to throttle button input its to sensitive for navigation control its running so fast
+const pokemonList = document.querySelectorAll(".pokemon");
+const focusNextPokemon = () => {
+    isPokemonFocused();
+    // We now know we are working with a pokemon in this app, but this should be more explicit
+    // This piece of code is repeated in previous with slight changes so should be made more
+    // functional by moving to its own function with inputs.
+    const activePokemon = document.activeElement?.id;
+    if (activePokemon) {
+        const activePokemonId = activePokemon?.split("-")[1];
+        const nextPokemonId = parseInt(activePokemonId) + 1;
+        const nextPokemon = document.getElementById(`pokemon-${nextPokemonId}`);
+        nextPokemon?.focus();
+    }
+};
+//Need to add safeguards so you cant go below 0 or above 150
+const focusPreviousPokemon = () => {
+    isPokemonFocused();
+    const activePokemon = document.activeElement?.id;
+    if (activePokemon) {
+        const activePokemonId = activePokemon?.split("-")[1];
+        const nextPokemonId = parseInt(activePokemonId) - 1;
+        const nextPokemon = document.getElementById(`pokemon-${nextPokemonId}`);
+        nextPokemon?.focus();
+    }
+};
+
 ready(function () {
-    console.log("ready");
+    //Select first pokemon for controller navigation
     //If we were iterating over an array we would want to cache the array first before looping for performance
     for (let pokeIndex = 1; pokeIndex < 151; pokeIndex++) {
         getPokemon(pokeIndex).then((pokemon) => {
-            const pokeBox = document.createElement("div");
+            const pokeBox = document.createElement("button");
             pokeBox.id = `pokemon-${pokeIndex}`;
             pokeBox.className = "pokemon";
+            pokeBox.tabIndex = pokeIndex;
             // The referencing of an object by its index instead of searching for the key value pair is unwise
             // Will update at a later date to use array.find()
             pokeBox.innerHTML = `

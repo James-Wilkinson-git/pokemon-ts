@@ -67,22 +67,67 @@ const updateStatus = () => {
             // make sure it is a button object
             if (typeof button === "object") {
                 // We only want data on pressed buttons
-                if (button.pressed) {
-                    console.log(buttonIndex, button.value);
+                if (buttonIndex === 5 && button.pressed) {
+                    focusNextPokemon();
+                }
+                if (buttonIndex === 4 && button.pressed) {
+                    focusPreviousPokemon();
                 }
             }
         });
     });
     requestAnimationFrame(updateStatus);
 };
+//Should put JS Doc in now, to tell this is called by focusNext and previous pokemon that are called on button press
+// check if the documents active element is a pokemon div, if not select the first pokemon div
+const isPokemonFocused = () => {
+    var _a;
+    const focused = document.activeElement;
+    if ((focused === null || focused === void 0 ? void 0 : focused.tagName) === "BUTTON" &&
+        focused.classList.contains("pokemon")) {
+        return;
+    }
+    else {
+        (_a = document.getElementById("pokemon-1")) === null || _a === void 0 ? void 0 : _a.focus();
+    }
+};
+// Need to throttle button input its to sensitive for navigation control its running so fast
+const pokemonList = document.querySelectorAll(".pokemon");
+const focusNextPokemon = () => {
+    var _a;
+    isPokemonFocused();
+    // We now know we are working with a pokemon in this app, but this should be more explicit
+    // This piece of code is repeated in previous with slight changes so should be made more
+    // functional by moving to its own function with inputs.
+    const activePokemon = (_a = document.activeElement) === null || _a === void 0 ? void 0 : _a.id;
+    if (activePokemon) {
+        const activePokemonId = activePokemon === null || activePokemon === void 0 ? void 0 : activePokemon.split("-")[1];
+        const nextPokemonId = parseInt(activePokemonId) + 1;
+        const nextPokemon = document.getElementById(`pokemon-${nextPokemonId}`);
+        nextPokemon === null || nextPokemon === void 0 ? void 0 : nextPokemon.focus();
+    }
+};
+//Need to add safeguards so you cant go below 0 or above 150
+const focusPreviousPokemon = () => {
+    var _a;
+    isPokemonFocused();
+    const activePokemon = (_a = document.activeElement) === null || _a === void 0 ? void 0 : _a.id;
+    if (activePokemon) {
+        const activePokemonId = activePokemon === null || activePokemon === void 0 ? void 0 : activePokemon.split("-")[1];
+        const nextPokemonId = parseInt(activePokemonId) - 1;
+        const nextPokemon = document.getElementById(`pokemon-${nextPokemonId}`);
+        nextPokemon === null || nextPokemon === void 0 ? void 0 : nextPokemon.focus();
+    }
+};
 ready(function () {
-    console.log("ready");
+    //Select first pokemon for controller navigation
     //If we were iterating over an array we would want to cache the array first before looping for performance
     for (let pokeIndex = 1; pokeIndex < 151; pokeIndex++) {
         getPokemon(pokeIndex).then((pokemon) => {
-            const pokeBox = document.createElement("div");
+            const pokeBox = document.createElement("button");
             pokeBox.id = `pokemon-${pokeIndex}`;
             pokeBox.className = "pokemon";
+            pokeBox.tabIndex = pokeIndex;
             // The referencing of an object by its index instead of searching for the key value pair is unwise
             // Will update at a later date to use array.find()
             pokeBox.innerHTML = `
