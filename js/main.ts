@@ -5,6 +5,7 @@ function ready(fn: Function): void {
         document.addEventListener("DOMContentLoaded", fn());
     }
 }
+// https://pokeapi.co/docs/v2#pokemon/
 type TPokemonAPI = {
     count: number;
     next: string | null;
@@ -56,7 +57,7 @@ const pokemonList = document.getElementById("pokemon-list");
 
 ready(function () {
     console.log("ready");
-    for (let pokeIndex = 0; pokeIndex < 20; pokeIndex++) {
+    for (let pokeIndex = 1; pokeIndex < 21; pokeIndex++) {
         getPokemon(pokeIndex).then((pokemon) => {
             pokemonList!.innerHTML += `<li> <img src="${pokemon.sprites.front_default}" alt="" /> ${pokemon.name} </li>`;
         });

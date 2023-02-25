@@ -25,7 +25,7 @@ const getPokemon = (pokeNum) => __awaiter(void 0, void 0, void 0, function* () {
 const pokemonList = document.getElementById("pokemon-list");
 ready(function () {
     console.log("ready");
-    for (let pokeIndex = 0; pokeIndex < 20; pokeIndex++) {
+    for (let pokeIndex = 1; pokeIndex < 20; pokeIndex++) {
         getPokemon(pokeIndex).then((pokemon) => {
             pokemonList.innerHTML += `<li> <img src="${pokemon.sprites.front_default}" alt="" /> ${pokemon.name} </li>`;
         });
