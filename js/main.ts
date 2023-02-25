@@ -60,11 +60,82 @@ const getPokemon = async (pokeNum: number): Promise<TPokemon> => {
         `https://pokeapi.co/api/v2/pokemon/${pokeNum}`
     );
     const data: TPokemon = await response.json();
-    console.log(data);
     return data;
 };
 const $pokemonList = document.getElementById("pokemon-list");
-
+// Gamepad Code
+interface Xbox360Controller {
+    0: "0";
+    1: "B";
+    2: "X";
+    3: "Y";
+    4: "LB";
+    5: "RB";
+    6: "LT";
+    7: "RT";
+    8: "Double Box";
+    9: "Hamburger";
+    10: "";
+    11: "";
+    12: "Top";
+    13: "Down";
+    14: "Left";
+    15: "Right";
+    16: "Xbox";
+    17: "";
+}
+// New to the game pad experimenting so some types are any until I learn what type they are
+const haveEvents = "ongamepadconnected" in window;
+const controllers: any = [];
+const connectHandler = (e: any) => {
+    addGamePad(e.gamepad);
+    console.log(e);
+};
+const addGamePad = (gamePad: Gamepad) => {
+    controllers[gamePad.index] = gamePad;
+    requestAnimationFrame(updateStatus);
+};
+const scanGamePads = () => {
+    const gamePads = navigator.getGamepads();
+    for (const gamePad of gamePads) {
+        if (gamePad) {
+            // Can be null if disconnected during the session
+            if (gamePad.index in controllers) {
+                controllers[gamePad.index] = gamePad;
+            } else {
+                addGamePad(gamePad);
+            }
+        }
+    }
+};
+const disconnectHandler = (e: any) => {
+    removeGamePad(e.gamepad);
+    console.log(e);
+};
+const removeGamePad = (gamePad: Gamepad) => {
+    delete controllers[gamePad.index];
+};
+// Recursive function to keep polling for button presses
+const updateStatus = () => {
+    //If there are no gamepad events on window scan again for pads
+    if (!haveEvents) {
+        scanGamePads();
+    }
+    // Check button presses on each controller
+    controllers.forEach((controller: Gamepad) => {
+        //Each controller check it's buttons
+        controller.buttons.forEach((button: GamepadButton, buttonIndex) => {
+            // make sure it is a button object
+            if (typeof button === "object") {
+                // We only want data on pressed buttons
+                if (button.pressed) {
+                    console.log(buttonIndex, button.value);
+                }
+            }
+        });
+    });
+    requestAnimationFrame(updateStatus);
+};
 ready(function () {
     console.log("ready");
     //If we were iterating over an array we would want to cache the array first before looping for performance
@@ -104,5 +175,10 @@ ready(function () {
             });
             $pokemonList?.appendChild(pokeBox);
         });
+    }
+    window.addEventListener("gamepadconnected", connectHandler);
+    window.addEventListener("gamepaddisconnected", disconnectHandler);
+    if (!haveEvents) {
+        setInterval(scanGamePads, 500);
     }
 });
