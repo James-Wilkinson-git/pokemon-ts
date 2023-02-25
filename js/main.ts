@@ -5,6 +5,7 @@ function ready(fn: Function): void {
         document.addEventListener("DOMContentLoaded", fn());
     }
 }
+// Type for generic list api no ID in URL
 // https://pokeapi.co/docs/v2#pokemon/
 type TPokemonAPI = {
     count: number;
@@ -12,7 +13,7 @@ type TPokemonAPI = {
     previous: string | null;
     results: [TPokemon];
 };
-
+// Type for when providing an ID
 // https://pokeapi.co/docs/v2#pokemon/{id}
 type TPokemon = {
     abilities: [];
@@ -49,7 +50,7 @@ const getPokemon = async (pokeNum: number): Promise<TPokemon> => {
     const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon/${pokeNum}`
     );
-    const data = await response.json();
+    const data: TPokemon = await response.json();
     console.log(data);
     return data;
 };
@@ -60,7 +61,6 @@ ready(function () {
     //If we were iterating over an array we would want to cache the array first before looping for performance
     for (let pokeIndex = 1; pokeIndex < 151; pokeIndex++) {
         getPokemon(pokeIndex).then((pokemon) => {
-            // ! operator tells typescript this can't be null
             const pokeBox = document.createElement("div");
             pokeBox.id = `pokemon-${pokeIndex}`;
             pokeBox.className = "pokemon";
@@ -75,9 +75,8 @@ ready(function () {
             pokeBox.addEventListener("click", (event) => {
                 // Event target can sometimes return not an element so let's make sure we have an element
                 if (event.target instanceof Element) {
-                    // Now that we know we have an element we can cast the event.target as an HTMLElement to access Element methods
-                    const target = event.target as HTMLElement;
-                    const targetDiv = target.closest("div");
+                    // Now that we know we have an element Typescript will let us access Element methods
+                    const targetDiv = event.target.closest("div");
                     const pokemonName =
                         targetDiv?.querySelector(".name")?.textContent;
                     alert(`Clicked  ${pokemonName}`);
