@@ -42,10 +42,19 @@ type TPokemon = {
         other: {};
         versions: {};
     };
-    stats: [];
+    stats: IPokemonStats[];
     types: [];
     weight: number;
 };
+interface IPokemonStats {
+    base_stat: number;
+    effort: number;
+    stat: IPokemonStat;
+}
+interface IPokemonStat {
+    name: string;
+    url: string;
+}
 const getPokemon = async (pokeNum: number): Promise<TPokemon> => {
     const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon/${pokeNum}`
@@ -70,6 +79,15 @@ ready(function () {
                 </span>
                 <span class="name">
                     ${pokemon.name}
+                </span>
+                <span class="hp">
+                ${pokemon.stats[0].stat.name} : ${pokemon.stats[0].base_stat}
+                </span>
+                <span class="attack">
+                ${pokemon.stats[1].stat.name} : ${pokemon.stats[1].base_stat}
+                </span>
+                <span class="defense">
+                ${pokemon.stats[2].stat.name} : ${pokemon.stats[2].base_stat}
                 </span>
             `;
             pokeBox.addEventListener("click", (event) => {

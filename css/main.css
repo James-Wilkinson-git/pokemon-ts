@@ -67,8 +67,21 @@ textarea {
     display: block;
     padding: 10px;
 }
+.pokemon:hover {
+    background-color: #ccc;
+}
 .pokemon .img {
     display: block;
+}
+.pokemon .name {
+    text-transform: capitalize;
+    display: block;
+}
+.pokemon .hp,
+.pokemon .attack,
+.pokemon .defense {
+    display: block;
+    text-transform: uppercase;
 }
 
 /* ==========================================================================
