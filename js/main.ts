@@ -73,6 +73,8 @@ ready(function () {
             const pokeBox = document.createElement("div");
             pokeBox.id = `pokemon-${pokeIndex}`;
             pokeBox.className = "pokemon";
+            // The referencing of an object by its index instead of searching for the key value pair is unwise
+            // Will update at a later date to use array.find()
             pokeBox.innerHTML = `
                 <span class="img">
                     <img src="${pokemon.sprites.front_default}" alt="" />
