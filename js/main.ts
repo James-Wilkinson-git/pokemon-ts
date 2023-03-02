@@ -114,13 +114,24 @@ const disconnectHandler = (e: any) => {
 const removeGamePad = (gamePad: Gamepad) => {
     delete controllers[gamePad.index];
 };
+let prevButtonPressed = 0;
+let buttonsState = 0;
 // Recursive function to keep polling for button presses
 const updateStatus = () => {
     //If there are no gamepad events on window scan again for pads
     if (!haveEvents) {
         scanGamePads();
     }
-    // Check button presses on each controller
+    let buttonsPressed = false;
+    const buttonPressed = (key: number) => {
+        if (key !== prevButtonPressed) {
+            focusPokemon(key);
+            prevButtonPressed = key;
+        } else if (!buttonPressed) {
+            console.log("same button");
+        }
+    };
+    //Check button presses on each controller
     controllers.forEach((controller: Gamepad) => {
         //Each controller check it's buttons
         controller.buttons.forEach((button: GamepadButton, buttonIndex) => {
@@ -128,14 +139,21 @@ const updateStatus = () => {
             if (typeof button === "object") {
                 // We only want data on pressed buttons
                 if (buttonIndex === 5 && button.pressed) {
-                    focusNextPokemon();
+                    buttonPressed(5);
+                    buttonsPressed = true;
                 }
                 if (buttonIndex === 4 && button.pressed) {
-                    focusPreviousPokemon();
+                    buttonPressed(4);
+                    buttonsPressed = true;
                 }
             }
         });
     });
+    if (!buttonsPressed && prevButtonPressed) {
+        console.log("same button");
+        prevButtonPressed = 0;
+    }
+
     requestAnimationFrame(updateStatus);
 };
 //Should put JS Doc in now, to tell this is called by focusNext and previous pokemon that are called on button press
@@ -153,28 +171,33 @@ const isPokemonFocused = () => {
 };
 // Need to throttle button input its to sensitive for navigation control its running so fast
 const pokemonList = document.querySelectorAll(".pokemon");
-const focusNextPokemon = () => {
+const focusPokemon = (key: number) => {
     isPokemonFocused();
     // We now know we are working with a pokemon in this app, but this should be more explicit
     // This piece of code is repeated in previous with slight changes so should be made more
     // functional by moving to its own function with inputs.
     const activePokemon = document.activeElement?.id;
     if (activePokemon) {
-        const activePokemonId = activePokemon?.split("-")[1];
-        const nextPokemonId = parseInt(activePokemonId) + 1;
-        const nextPokemon = document.getElementById(`pokemon-${nextPokemonId}`);
-        nextPokemon?.focus();
-    }
-};
-//Need to add safeguards so you cant go below 0 or above 150
-const focusPreviousPokemon = () => {
-    isPokemonFocused();
-    const activePokemon = document.activeElement?.id;
-    if (activePokemon) {
-        const activePokemonId = activePokemon?.split("-")[1];
-        const nextPokemonId = parseInt(activePokemonId) - 1;
-        const nextPokemon = document.getElementById(`pokemon-${nextPokemonId}`);
-        nextPokemon?.focus();
+        let activePokemonId = parseInt(activePokemon?.split("-")[1]);
+        if (key === 5) {
+            const nextPokemonId =
+                activePokemonId <= 150
+                    ? activePokemonId + 1
+                    : (activePokemonId = 1);
+            const nextPokemon = document.getElementById(
+                `pokemon-${nextPokemonId}`
+            );
+            nextPokemon?.focus();
+        } else if (key === 4) {
+            const prevPokemonId =
+                activePokemonId <= 150
+                    ? activePokemonId - 1
+                    : (activePokemonId = 150);
+            const prevPokemon = document.getElementById(
+                `pokemon-${prevPokemonId}`
+            );
+            prevPokemon?.focus();
+        }
     }
 };
 
