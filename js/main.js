@@ -121,16 +121,24 @@ const focusPokemon = (key) => {
     if (activePokemon) {
         let activePokemonId = parseInt(activePokemon === null || activePokemon === void 0 ? void 0 : activePokemon.split("-")[1]);
         if (key === 5) {
-            const nextPokemonId = activePokemonId <= 150
-                ? activePokemonId + 1
-                : (activePokemonId = 1);
+            let nextPokemonId = 0;
+            if (activePokemonId === 150) {
+                activePokemonId = 1;
+            }
+            else {
+                activePokemonId + 1;
+            }
             const nextPokemon = document.getElementById(`pokemon-${nextPokemonId}`);
             nextPokemon === null || nextPokemon === void 0 ? void 0 : nextPokemon.focus();
         }
         else if (key === 4) {
-            const prevPokemonId = activePokemonId <= 150
-                ? activePokemonId - 1
-                : (activePokemonId = 150);
+            let prevPokemonId = 0;
+            if (activePokemonId === 1) {
+                activePokemonId = 150;
+            }
+            else {
+                activePokemonId - 1;
+            }
             const prevPokemon = document.getElementById(`pokemon-${prevPokemonId}`);
             prevPokemon === null || prevPokemon === void 0 ? void 0 : prevPokemon.focus();
         }
