@@ -54,8 +54,7 @@ const disconnectHandler = (e) => {
 const removeGamePad = (gamePad) => {
     delete controllers[gamePad.index];
 };
-let prevButtonPressed = 0;
-let buttonsState = 0;
+let prevButtonPressed = -1;
 // Recursive function to keep polling for button presses
 const updateStatus = () => {
     //If there are no gamepad events on window scan again for pads
@@ -63,13 +62,10 @@ const updateStatus = () => {
         scanGamePads();
     }
     let buttonsPressed = false;
-    const buttonPressed = (key) => {
+    const buttonPressed = (key, cb) => {
         if (key !== prevButtonPressed) {
-            focusPokemon(key);
+            cb(key);
             prevButtonPressed = key;
-        }
-        else if (!buttonPressed) {
-            console.log("same button");
         }
     };
     //Check button presses on each controller
@@ -80,19 +76,22 @@ const updateStatus = () => {
             if (typeof button === "object") {
                 // We only want data on pressed buttons
                 if (buttonIndex === 5 && button.pressed) {
-                    buttonPressed(5);
+                    buttonPressed(5, focusPokemon);
                     buttonsPressed = true;
                 }
                 if (buttonIndex === 4 && button.pressed) {
-                    buttonPressed(4);
+                    buttonPressed(4, focusPokemon);
+                    buttonsPressed = true;
+                }
+                if (buttonIndex === 0 && button.pressed) {
+                    buttonPressed(0, clickPokemon);
                     buttonsPressed = true;
                 }
             }
         });
     });
-    if (!buttonsPressed && prevButtonPressed) {
-        console.log("same button");
-        prevButtonPressed = 0;
+    if (!buttonsPressed && prevButtonPressed !== -1) {
+        prevButtonPressed = -1;
     }
     requestAnimationFrame(updateStatus);
 };
@@ -120,16 +119,13 @@ const focusPokemon = (key) => {
     const activePokemon = (_a = document.activeElement) === null || _a === void 0 ? void 0 : _a.id;
     if (activePokemon) {
         let activePokemonId = parseInt(activePokemon === null || activePokemon === void 0 ? void 0 : activePokemon.split("-")[1]);
-        console.log(activePokemonId);
         if (key === 5) {
             let nextPokemonId = activePokemonId;
             if (activePokemonId === 150) {
                 nextPokemonId = 1;
-                console.log(activePokemonId);
             }
             else {
                 nextPokemonId += 1;
-                console.log(activePokemonId);
             }
             const nextPokemon = document.getElementById(`pokemon-${nextPokemonId}`);
             nextPokemon === null || nextPokemon === void 0 ? void 0 : nextPokemon.focus();
@@ -137,17 +133,19 @@ const focusPokemon = (key) => {
         else if (key === 4) {
             let prevPokemonId = activePokemonId;
             if (activePokemonId === 1) {
-                console.log(activePokemonId);
                 prevPokemonId = 150;
             }
             else {
-                console.log(activePokemonId);
                 prevPokemonId -= 1;
             }
             const prevPokemon = document.getElementById(`pokemon-${prevPokemonId}`);
             prevPokemon === null || prevPokemon === void 0 ? void 0 : prevPokemon.focus();
         }
     }
+};
+const clickPokemon = (key) => {
+    const activePokemon = document.activeElement;
+    activePokemon.click();
 };
 ready(function () {
     //Select first pokemon for controller navigation
