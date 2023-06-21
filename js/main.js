@@ -152,29 +152,16 @@ ready(function () {
     //If we were iterating over an array we would want to cache the array first before looping for performance
     for (let pokeIndex = 1; pokeIndex < 151; pokeIndex++) {
         getPokemon(pokeIndex).then((pokemon) => {
-            const pokeBox = document.createElement("button");
+            const pokeBox = document.createElement("pokemon-entry");
             pokeBox.id = `pokemon-${pokeIndex}`;
-            pokeBox.className = "pokemon";
             pokeBox.tabIndex = pokeIndex;
             // The referencing of an object by its index instead of searching for the key value pair is unwise
             // Will update at a later date to use array.find()
-            pokeBox.innerHTML = `
-                <span class="img">
-                    <img src="${pokemon.sprites.front_default}" alt="" />
-                </span>
-                <span class="name">
-                    ${pokemon.name}
-                </span>
-                <span class="hp">
-                ${pokemon.stats[0].stat.name} : ${pokemon.stats[0].base_stat}
-                </span>
-                <span class="attack">
-                ${pokemon.stats[1].stat.name} : ${pokemon.stats[1].base_stat}
-                </span>
-                <span class="defense">
-                ${pokemon.stats[2].stat.name} : ${pokemon.stats[2].base_stat}
-                </span>
-            `;
+            pokeBox.setAttribute("image", pokemon.sprites.front_default);
+            pokeBox.setAttribute("name", pokemon.name);
+            pokeBox.setAttribute("hp", pokemon.stats[0].base_stat.toString());
+            pokeBox.setAttribute("attack", pokemon.stats[1].base_stat.toString());
+            pokeBox.setAttribute("defense", pokemon.stats[2].base_stat.toString());
             pokeBox.addEventListener("click", (event) => {
                 var _a;
                 // Event target can sometimes return not an element so let's make sure we have an element

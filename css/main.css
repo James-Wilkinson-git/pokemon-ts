@@ -62,27 +62,6 @@ textarea {
     row-gap: 10px;
     column-gap: 30px;
 }
-.pokemon {
-    border: 1px dotted #666;
-    display: block;
-    padding: 10px;
-}
-.pokemon:hover {
-    background-color: #ccc;
-}
-.pokemon .img {
-    display: block;
-}
-.pokemon .name {
-    text-transform: capitalize;
-    display: block;
-}
-.pokemon .hp,
-.pokemon .attack,
-.pokemon .defense {
-    display: block;
-    text-transform: uppercase;
-}
 
 /* ==========================================================================
    Media Queries
