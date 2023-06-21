@@ -219,7 +219,7 @@ ready(function () {
             // The referencing of an object by its index instead of searching for the key value pair is unwise
             // Will update at a later date to use array.find()
             pokeBox.setAttribute(
-                "image",
+                "img",
                 pokemon.sprites.front_default as string
             );
             pokeBox.setAttribute("name", pokemon.name);

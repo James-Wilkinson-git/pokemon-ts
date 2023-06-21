@@ -11,25 +11,13 @@
         <link rel="stylesheet" href="./css/main.css" />
         <script
             type="module"
-            src="/js/p-7c3ed200.js"
-            data-stencil
-            data-resources-url="/js/"
-            data-stencil-namespace="pokemon-stencil"
+            src="https://unpkg.com/pokemon-stencil@0.0.1/dist/pokemon-stencil/pokemon-stencil.esm.js"
         ></script>
-        <script nomodule src="/js/pokemon-stencil.js"></script>
     </head>
     <body>
         <div id="container">
             <h1>Pokedex</h1>
-            <div id="pokemon-list">
-                <pokemon-entry
-                    name="Bulbasaur"
-                    hp="12"
-                    attack="122"
-                    defense="32"
-                    img="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-                ></pokemon-entry>
-            </div>
+            <div id="pokemon-list"></div>
         </div>
 
         <script src="./js/main.js"></script>

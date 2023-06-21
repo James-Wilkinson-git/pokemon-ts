@@ -157,7 +157,7 @@ ready(function () {
             pokeBox.tabIndex = pokeIndex;
             // The referencing of an object by its index instead of searching for the key value pair is unwise
             // Will update at a later date to use array.find()
-            pokeBox.setAttribute("image", pokemon.sprites.front_default);
+            pokeBox.setAttribute("img", pokemon.sprites.front_default);
             pokeBox.setAttribute("name", pokemon.name);
             pokeBox.setAttribute("hp", pokemon.stats[0].base_stat.toString());
             pokeBox.setAttribute("attack", pokemon.stats[1].base_stat.toString());
